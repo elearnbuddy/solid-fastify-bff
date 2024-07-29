@@ -1,0 +1,28 @@
+{
+	"name": "solidjs-bff",
+	"private": true,
+	"version": "0.0.0",
+	"scripts": {
+		"dev:frontend": "vite",
+		"dev:backend": "ts-node-dev  ./src/backend/index.ts",
+		"dev": "concurrently \"npm:dev:backend\" \"npm:dev:frontend\"",
+		"build:frontend": "tsc -b && vite build",
+		"preview": "vite preview"
+	},
+	"dependencies": {
+		"fastify": "^4.28.1",
+		"solid-js": "^1.8.18"
+	},
+	"devDependencies": {
+		"@types/node": "20.14.12",
+		"concurrently": "8.2.2",
+		"dotenv": "16.4.5",
+		"terser": "^5.31.3",
+		"ts-node-dev": "2.0.0",
+		"ts-node": "10.9.2",
+		"typescript": "5.5.4",
+		"vite": "5.3.5",
+		"vite-plugin-solid": "2.10.2",
+		"vite-plugin-full-reload": "1.2.0"
+	}
+}

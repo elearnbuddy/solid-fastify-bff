@@ -4,18 +4,24 @@
 	"version": "0.0.0",
 	"scripts": {
 		"dev:frontend": "vite",
-		"dev:backend": "ts-node-dev  ./src/backend/index.ts",
-		"dev": "concurrently \"npm:dev:backend\" \"npm:dev:frontend\"",
-		"build:frontend": "tsc -b && vite build",
-		"preview": "vite preview"
+		"dev:backend": "ts-node-dev ./src/backend/index.ts",
+		"dev": "npm run dev:backend & npm run dev:frontend",
+		"lint": "tsc -b",
+		"build:frontend": "vite build",
+		"build:backend": "esbuild ./server.ts --bundle --platform=node --outfile=./dist/server.js --minify",
+		"build": "npm run lint && rimraf ./dist && npm run build:frontend && npm run build:backend",
+		"start": "node ./dist/server.js"
 	},
 	"dependencies": {
 		"fastify": "^4.28.1",
-		"solid-js": "^1.8.18"
+		"solid-js": "^1.8.18",
+		"@fastify/static": "7.0.4",
+		"@fastify/cookie": "9.3.1",
+		"@fastify/session": "10.9.0",
+		"@fastify/multipart": "8.3.0"
 	},
 	"devDependencies": {
 		"@types/node": "20.14.12",
-		"concurrently": "8.2.2",
 		"dotenv": "16.4.5",
 		"terser": "^5.31.3",
 		"ts-node-dev": "2.0.0",
@@ -23,6 +29,9 @@
 		"typescript": "5.5.4",
 		"vite": "5.3.5",
 		"vite-plugin-solid": "2.10.2",
-		"vite-plugin-full-reload": "1.2.0"
+		"vite-plugin-full-reload": "1.2.0",
+		"vite-plugin-compression": "0.5.1",
+		"rimraf": "6.0.1",
+		"esbuild": "0.23.1"
 	}
 }

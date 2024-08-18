@@ -1,13 +1,15 @@
 // Import the framework and instantiate it
 import Fastify from "fastify";
 import "dotenv/config";
-import { routes } from "./api/routes";
-import session from "@fastify/session";
+import { routes } from "./src/backend/api/routes";
+import FastifyStatic from "@fastify/static";
 import cookie from "@fastify/cookie";
+import session from "@fastify/session";
 import fastifyMultipart from "@fastify/multipart";
+import path from "path";
 
 const fastify = Fastify({
-	logger: true,
+	logger: false,
 });
 
 fastify.register(cookie, {
@@ -16,7 +18,7 @@ fastify.register(cookie, {
 	parseOptions: {
 		domain: "/",
 		httpOnly: true,
-		sameSite: false,
+		sameSite: true,
 	},
 });
 
@@ -26,10 +28,25 @@ fastify.register(fastifyMultipart);
 
 fastify.register(routes, { prefix: "/api" });
 
+fastify.register(FastifyStatic, {
+	root: path.join(__dirname, "public"),
+	prefix: "/",
+	preCompressed: true,
+});
+
+fastify.setNotFoundHandler((req, reply) => {
+	// API 404
+	if (req.raw.url && req.raw.url.startsWith("/api")) {
+		return reply.status(404).send({ error: "Page not found" });
+	}
+
+	return reply.status(200).sendFile("index.html");
+});
+
 // Run the server!
 fastify.listen(
 	{
-		port: 3001,
+		port: parseInt(process.env.PORT ?? "3000", 10),
 		host: "0.0.0.0",
 	},
 	(err, address) => {

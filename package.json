@@ -18,7 +18,8 @@
 		"@fastify/static": "7.0.4",
 		"@fastify/cookie": "9.3.1",
 		"@fastify/session": "10.9.0",
-		"@fastify/multipart": "8.3.0"
+		"@fastify/multipart": "8.3.0",
+		"pretty-cache-header": "1.0.0"
 	},
 	"devDependencies": {
 		"@types/node": "20.14.12",

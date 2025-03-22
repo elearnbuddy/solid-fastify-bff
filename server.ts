@@ -5,6 +5,7 @@ import { routes } from "./src/backend/api/routes";
 import FastifyStatic from "@fastify/static";
 import cookie from "@fastify/cookie";
 import session from "@fastify/session";
+import { cacheHeader } from "pretty-cache-header";
 import fastifyMultipart from "@fastify/multipart";
 import path from "path";
 
@@ -30,8 +31,30 @@ fastify.register(routes, { prefix: "/api" });
 
 fastify.register(FastifyStatic, {
 	root: path.join(__dirname, "public"),
-	prefix: "/",
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	allowedPath(pathName, _root, _request) {
+		return !pathName.startsWith("/api");
+	},
 	preCompressed: true,
+	cacheControl: false,
+	setHeaders(res, pathName) {
+		if (
+			path.basename(pathName).endsWith(".html") ||
+			path.basename(pathName).endsWith(".html.br") ||
+			path.basename(pathName).endsWith(".html.gz")
+		) {
+			res.setHeader("Cache-Control", "no-cache, must-revalidate");
+		} else {
+			res.setHeader(
+				"Cache-Control",
+				cacheHeader({
+					public: true,
+					maxAge: "1 year",
+					immutable: true,
+				})
+			);
+		}
+	},
 });
 
 fastify.setNotFoundHandler((req, reply) => {
